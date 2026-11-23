@@ -6,6 +6,12 @@ import { chmodSync, mkdirSync, writeFileSync } from "node:fs";
 // a little baffled, funny in one word, tied to robots, fresh, instantly readable.
 const WORD = "Robit";
 
+// The gate refuses anything but UTF-8 text of 1 to 30 characters that is
+// not whitespace-only, so fail loudly here instead of writing a bad entry.
+if (WORD.length < 1 || WORD.length > 30 || WORD.trim() !== WORD || /\s/.test(WORD)) {
+  throw new Error(`invalid entry word: ${JSON.stringify(WORD)}`);
+}
+
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", WORD, "utf8");
 chmodSync("/output/entry.txt", 0o644);
